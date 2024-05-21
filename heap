@@ -1,0 +1,79 @@
+#include <iostream>
+
+using namespace std;
+
+template<class type>
+struct heap{
+    type a[1000];
+    size_t n = 0;
+    
+    void __down(int i){
+        int m = i;
+        if(i * 2 + 1 < n && a[i * 2 + 1] > a[m]){
+            m = i * 2 + 1;
+        }
+        if(i * 2 + 2 < n && a[i * 2 + 2] > a[m]){
+            m = i * 2 + 2;
+        }
+        if(i == m) return;
+        swap(a[i], a[m]);
+        __down(m);
+    }
+    
+    void __up(int i){
+        swap(a[i], a[(i - 1) / 2]);
+        i = (i - 1) / 2;
+        if(a[i] > a[(i - 1) / 2]){
+            __up(i);
+        }
+    }
+    
+    void push(type x){
+        a[n] = x;
+        int i = n;
+        n++;
+        if(a[i] > a[(i - 1) / 2]){
+            __up(i);
+        }
+    }
+    
+    type top(){
+        if(n != 0){
+            return a[0];
+        }
+        return 0;
+    }
+    
+    void pop(){
+        if(n != 0){
+            swap(a[n - 1], a[0]);
+            __down(0);
+            n--;
+        }
+    }
+    
+    size_t size(){
+        return n;
+    }
+    
+    bool empty(){
+        if(n == 0){
+            return 1;
+        }
+        return 0;
+    }
+};
+
+int main(){
+    heap <int> h;
+    h.push(10);
+    h.push(0);
+    h.push(20);
+    h.push(7);
+    h.push(3);
+    while(!h.empty()){
+        cout << h.top() << " ";
+        h.pop();
+    }
+    return 0;
+}
